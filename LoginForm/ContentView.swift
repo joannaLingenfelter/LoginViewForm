@@ -12,8 +12,6 @@ protocol ErrorShowingTextFieldStyle: TextFieldStyle {
 }
 
 struct ErrorTextField<TextFieldStyle: ErrorShowingTextFieldStyle>: View {
-    typealias Body = TextField
-
     @Binding var text: String
     @Binding var error: String?
 
@@ -26,7 +24,7 @@ struct ErrorTextField<TextFieldStyle: ErrorShowingTextFieldStyle>: View {
     }
 }
 
-struct LabeledTextFieldStyle: ErrorShowingTextFieldStyle {
+struct HorizontalStackedLabelTextFieldStyle: ErrorShowingTextFieldStyle {
     let title: String
     let error: String?
 
@@ -85,7 +83,6 @@ struct ContentView: View {
             } label: {
                 Text("Login")
             }
-
             .padding(.horizontal, 40)
             .padding(.vertical, 10)
             .background(Color(.black))
@@ -107,7 +104,7 @@ struct ContentView: View {
 
     @ViewBuilder
     func makeErrorTextField(text: Binding<String>, error: Binding<String?>, title: String, formField: FormField) -> some View {
-        ErrorTextField(text: text, error: error, title: title, textFieldStyle: LabeledTextFieldStyle.self)
+        ErrorTextField(text: text, error: error, title: title, textFieldStyle: HorizontalStackedLabelTextFieldStyle.self)
             .focused(self.$focusedField, equals: formField)
             .padding(.horizontal, 20)
             .onChange(of: self.focusedField) { [focusedField] newValue in
