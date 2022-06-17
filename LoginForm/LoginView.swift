@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum TextFieldKey: String, CustomStringConvertible {
+private enum TextFieldKey: String, CustomStringConvertible {
 
     case username
     case password
@@ -29,28 +29,18 @@ struct LoginView: View {
     var body: some View {
         VStack(spacing: 20) {
             VStack {
-                L20TextField(usernameModel)
-                    .focused(self.$focusedField, equals: .username)
-                    .onChange(of: self.focusedField) { [focusedField] _ in
-                        withAnimation {
-                            if focusedField == .username {
-                                usernameModel.error = usernameModel.text.isEmpty ? errorText : nil
-                            }
-                        }
-                    }.onSubmit {
+                LoginTextField(usernameModel, key: .username)
+                    .textContentType(.username)
+                    .submitLabel(.next)
+                    .onSubmit {
                         focusedField = .password
-                    }.submitLabel(.next)
-                L20TextField(passwordModel)
-                    .focused(self.$focusedField, equals: .password)
-                    .onChange(of: self.focusedField) { [focusedField] _ in
-                        withAnimation {
-                            if focusedField == .password {
-                                passwordModel.error = passwordModel.text.isEmpty ? errorText : nil
-                            }
-                        }
-                    }.onSubmit {
+                    }
+                LoginTextField(passwordModel, key: .password)
+                    .textContentType(.password)
+                    .submitLabel(.send)
+                    .onSubmit {
                         focusedField = nil
-                    }.submitLabel(.send)
+                    }
             }
             Button {
                 focusedField = nil
@@ -60,6 +50,19 @@ struct LoginView: View {
             .buttonStyle(.l20Primary)
         }
         .fixedSize(horizontal: false, vertical: true)
+    }
+
+    @ViewBuilder
+    private func LoginTextField(_ model: L20TextField.ViewModel, key: TextFieldKey) -> some View {
+        L20TextField(model)
+            .focused(self.$focusedField, equals: key)
+            .onChange(of: self.focusedField) { [focusedField] _ in
+                withAnimation {
+                    if focusedField == key {
+                        model.error = model.text.isEmpty ? errorText : nil
+                    }
+                }
+            }
     }
 }
 
