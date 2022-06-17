@@ -27,9 +27,15 @@ struct LoginView: View {
 
     var body: some View {
         VStack() {
-            makeErrorTextField(text: $username, error: $usernameFocusError, title: FormField.username.title, formField: .username)
+            makeErrorTextField(text: $username,
+                               error: $usernameFocusError,
+                               title: FormField.username.title,
+                               formField: .username)
 
-            makeErrorTextField(text: $password, error: $passwordFocusError, title: FormField.password.title, formField: .password)
+            makeErrorTextField(text: $password,
+                               error: $passwordFocusError,
+                               title: FormField.password.title,
+                               formField: .password)
 
             Spacer(minLength: 20)
             Button {
@@ -57,22 +63,33 @@ struct LoginView: View {
     }
 
     @ViewBuilder
-    func makeErrorTextField(text: Binding<String>, error: Binding<String?>, title: String, formField: FormField) -> some View {
-        ErrorTextField(text: text, error: error, title: title, textFieldStyle: HorizontalStackedLabelTextFieldStyle.self)
-            .focused(self.$focusedField, equals: formField)
-            .padding(.horizontal, 20)
-            .onChange(of: self.focusedField) { [focusedField] newValue in
-                withAnimation {
-                    updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
-                }
-            }
-            .onChange(of: text.wrappedValue) { newValue in
-                if error.wrappedValue != nil && !newValue.isEmpty {
+    func makeErrorTextField(text: Binding<String>,
+                            error: Binding<String?>,
+                            title: String,
+                            formField: FormField) -> some View {
+        VStack(alignment: .leading) {
+            TextField("", text: text)
+                .textFieldStyle(HorizontalStackedLabelTextFieldStyle(title: title))
+                .focused(self.$focusedField, equals: formField)
+                .onChange(of: self.focusedField) { [focusedField] newValue in
                     withAnimation {
-                        error.wrappedValue = nil
+                        updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
                     }
                 }
-            }
+                .onChange(of: text.wrappedValue) { newValue in
+                    if error.wrappedValue != nil && !newValue.isEmpty {
+                        withAnimation {
+                            error.wrappedValue = nil
+                        }
+                    }
+                }
+
+            Text(error.wrappedValue ?? "")
+                .foregroundColor(.red)
+                .opacity(error.wrappedValue == nil ? 0.0 : 1.0)
+                .font(.caption)
+        }
+        .padding(.horizontal, 20)
     }
 
     func updateErrorsForFocusState(currentlyActiveField: FormField?, previouslyActiveField: FormField?) {
