@@ -23,8 +23,6 @@ struct LoginView: View {
     @State private var usernameFocusError: String? = nil
     @State private var passwordFocusError: String? = nil
 
-    @State var test: String = ""
-
     let errorText = "Required field"
 
     var body: some View {
