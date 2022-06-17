@@ -113,18 +113,22 @@ struct ContentView: View {
             .focused(self.$focusedField, equals: fieldName)
             .padding(.horizontal, 20)
             .onChange(of: self.focusedField) { [focusedField] newValue in
-                if focusedField == nil {
-                    // First change of focus
-                    if newValue == .password {
-                        passwordFocusError = password.isEmpty ? errorText : nil
-                    } else if newValue == .username {
-                        usernameFocusError = username.isEmpty ? errorText : nil
-                    }
-                } else {
-                    usernameFocusError = username.isEmpty ? errorText : nil
-                    passwordFocusError = password.isEmpty ? errorText : nil
-                }
+                updateErrorsForFocusStates(newValue, previouslyActiveField: focusedField)
             }
+    }
+
+    func updateErrorsForFocusStates(_ currentlyActiveField: FormField?, previouslyActiveField: FormField?) {
+        if previouslyActiveField == nil {
+            // First change of focus
+            if currentlyActiveField == .password {
+                passwordFocusError = password.isEmpty ? errorText : nil
+            } else if currentlyActiveField == .username {
+                usernameFocusError = username.isEmpty ? errorText : nil
+            }
+        } else {
+            usernameFocusError = username.isEmpty ? errorText : nil
+            passwordFocusError = password.isEmpty ? errorText : nil
+        }
     }
 }
 
