@@ -33,7 +33,9 @@ struct LoginView: View {
 
             Spacer(minLength: 20)
             Button {
-                setFocusError(for: FormField.allCases)
+                withAnimation {
+                    setFocusError(for: FormField.allCases)
+                }
             } label: {
                 Text("Login")
             }
@@ -42,7 +44,9 @@ struct LoginView: View {
         }
         .fixedSize(horizontal: false, vertical: true)
         .onSubmit {
-            setFocusError(for: FormField.allCases)
+            withAnimation {
+                setFocusError(for: FormField.allCases)
+            }
             
             if focusedField == .username {
                 focusedField = .password
@@ -58,11 +62,15 @@ struct LoginView: View {
             .focused(self.$focusedField, equals: formField)
             .padding(.horizontal, 20)
             .onChange(of: self.focusedField) { [focusedField] newValue in
-                updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
+                withAnimation {
+                    updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
+                }
             }
             .onChange(of: text.wrappedValue) { newValue in
                 if error.wrappedValue != nil && !newValue.isEmpty {
-                    error.wrappedValue = nil
+                    withAnimation {
+                        error.wrappedValue = nil
+                    }
                 }
             }
     }
