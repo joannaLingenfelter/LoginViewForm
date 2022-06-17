@@ -75,9 +75,9 @@ struct ContentView: View {
 
     var body: some View {
         VStack() {
-            makeErrorTextField(text: $username, error: $usernameFocusError, title: FormField.username.title, fieldName: .username)
+            makeErrorTextField(text: $username, error: $usernameFocusError, title: FormField.username.title, formField: .username)
 
-            makeErrorTextField(text: $password, error: $passwordFocusError, title: FormField.password.title, fieldName: .password)
+            makeErrorTextField(text: $password, error: $passwordFocusError, title: FormField.password.title, formField: .password)
 
             Spacer(minLength: 20)
             Button {
@@ -108,9 +108,9 @@ struct ContentView: View {
     }
 
     @ViewBuilder
-    func makeErrorTextField(text: Binding<String>, error: Binding<String?>, title: String, fieldName: FormField) -> some View {
+    func makeErrorTextField(text: Binding<String>, error: Binding<String?>, title: String, formField: FormField) -> some View {
         ErrorTextField(text: text, error: error, title: title, textFieldStyle: LabeledTextFieldStyle.self)
-            .focused(self.$focusedField, equals: fieldName)
+            .focused(self.$focusedField, equals: formField)
             .padding(.horizontal, 20)
             .onChange(of: self.focusedField) { [focusedField] newValue in
                 updateErrorsForFocusStates(newValue, previouslyActiveField: focusedField)
