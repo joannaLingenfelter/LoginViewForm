@@ -7,17 +7,40 @@
 
 import SwiftUI
 
-struct InlineError: ViewModifier {
-    let error: String?
+private struct InlineError<Label: View>: ViewModifier {
+    let label: Label?
+
+    init(_ error: String?) where Label == Text {
+        if let error = error {
+            label = Text(error)
+                .foregroundColor(.red)
+                .font(.caption)
+        } else {
+            label = nil
+        }
+    }
+
+    init(@ViewBuilder _ label: () -> Label) {
+        self.label = label()
+    }
 
     func body(content: Content) -> some View {
         VStack(alignment: .leading) {
             content
-
-            Text(error ?? "")
-                .foregroundColor(.red)
-                .opacity(error == nil ? 0.0 : 1.0)
-                .font(.caption)
+            if let label = label {
+                label
+            }
         }
+    }
+}
+
+extension View {
+
+    func inlineError<Label: View>(@ViewBuilder _ label: () -> Label) -> some View {
+        modifier(InlineError(label))
+    }
+
+    func inlineError(_ title: String?) -> some View {
+        modifier(InlineError(title))
     }
 }

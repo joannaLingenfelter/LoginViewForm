@@ -69,6 +69,14 @@ struct LoginView: View {
                             formField: FormField) -> some View {
         TextField("", text: text)
             .textFieldStyle(HorizontalStackedLabelTextFieldStyle(title: title))
+            .inlineError(error.wrappedValue)
+            .inlineError {
+                if let error = error.wrappedValue {
+                    Text(error)
+                        .bold()
+                        .foregroundColor(.purple)
+                }
+            }
             .focused(self.$focusedField, equals: formField)
             .onChange(of: self.focusedField) { [focusedField] newValue in
                 withAnimation {
@@ -82,7 +90,6 @@ struct LoginView: View {
                     }
                 }
             }
-            .modifier(InlineError(error: error.wrappedValue))
             .padding(.horizontal, 20)
     }
 
