@@ -8,17 +8,8 @@
 import SwiftUI
 
 private struct InlineError<Label: View>: ViewModifier {
-    let label: Label?
 
-    init(_ error: String?) where Label == Text {
-        if let error = error {
-            label = Text(error)
-                .foregroundColor(.red)
-                .font(.caption)
-        } else {
-            label = nil
-        }
-    }
+    private let label: Label
 
     init(@ViewBuilder _ label: () -> Label) {
         self.label = label()
@@ -27,20 +18,21 @@ private struct InlineError<Label: View>: ViewModifier {
     func body(content: Content) -> some View {
         VStack(alignment: .leading) {
             content
-            if let label = label {
-                label
-            }
+            label
         }
     }
 }
 
 extension View {
 
-    func inlineError<Label: View>(@ViewBuilder _ label: () -> Label) -> some View {
-        modifier(InlineError(label))
+    func inlineError(_ title: String?) -> some View {
+        modifier(InlineError {
+            if let title = title {
+                Text(title)
+                    .foregroundColor(.red)
+                    .font(.caption)
+            }
+        })
     }
 
-    func inlineError(_ title: String?) -> some View {
-        modifier(InlineError(title))
-    }
 }
