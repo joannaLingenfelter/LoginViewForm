@@ -54,7 +54,7 @@ struct LabeledTextFieldStyle: ErrorShowingTextFieldStyle {
 }
 
 struct ContentView: View {
-    enum FormField: String {
+    enum FormField: String, CaseIterable {
         case username
         case password
 
@@ -81,8 +81,7 @@ struct ContentView: View {
 
             Spacer(minLength: 20)
             Button {
-                usernameFocusError = username.isEmpty ? errorText : nil
-                passwordFocusError = password.isEmpty ? errorText : nil
+                setFocusError(for: FormField.allCases)
             } label: {
                 Text("Login")
             }
@@ -96,8 +95,7 @@ struct ContentView: View {
         }
         .fixedSize(horizontal: false, vertical: true)
         .onSubmit {
-            usernameFocusError = username.isEmpty ? errorText : nil
-            passwordFocusError = password.isEmpty ? errorText : nil
+            setFocusError(for: FormField.allCases)
             
             if focusedField == .username {
                 focusedField = .password
@@ -113,21 +111,30 @@ struct ContentView: View {
             .focused(self.$focusedField, equals: formField)
             .padding(.horizontal, 20)
             .onChange(of: self.focusedField) { [focusedField] newValue in
-                updateErrorsForFocusStates(newValue, previouslyActiveField: focusedField)
+                updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
             }
     }
 
-    func updateErrorsForFocusStates(_ currentlyActiveField: FormField?, previouslyActiveField: FormField?) {
-        if previouslyActiveField == nil {
-            // First change of focus
+    func updateErrorsForFocusState(currentlyActiveField: FormField?, previouslyActiveField: FormField?) {
+        if previouslyActiveField == .username {
             if currentlyActiveField == .password {
-                passwordFocusError = password.isEmpty ? errorText : nil
-            } else if currentlyActiveField == .username {
-                usernameFocusError = username.isEmpty ? errorText : nil
+                setFocusError(for: [.username])
             }
-        } else {
-            usernameFocusError = username.isEmpty ? errorText : nil
-            passwordFocusError = password.isEmpty ? errorText : nil
+        } else if previouslyActiveField == .password {
+            if currentlyActiveField == .username {
+                setFocusError(for: [.password])
+            }
+        }
+    }
+
+    func setFocusError(for fields: [FormField]) {
+        for field in fields {
+            switch field {
+            case .username:
+                usernameFocusError = username.isEmpty ? errorText : nil
+            case .password:
+                passwordFocusError = password.isEmpty ? errorText : nil
+            }
         }
     }
 }
