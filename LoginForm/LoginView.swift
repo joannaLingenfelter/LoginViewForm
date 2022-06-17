@@ -7,106 +7,59 @@
 
 import SwiftUI
 
-struct LoginView: View {
-    enum FormField: String, CaseIterable {
-        case username
-        case password
+enum TextFieldKey: String, CustomStringConvertible {
 
-        var title: String {
-            return rawValue.uppercased()
-        }
+    case username
+    case password
+
+    var description: String {
+        rawValue.capitalized
     }
+}
 
-    @FocusState private var focusedField: FormField?
-    @State private var username: String = ""
-    @State private var password: String = ""
-    @State private var usernameFocusError: String? = nil
-    @State private var passwordFocusError: String? = nil
+struct LoginView: View {
+
+    @StateObject private var usernameModel = L20TextField.ViewModel(title: TextFieldKey.username)
+    @StateObject private var passwordModel = L20TextField.ViewModel(title: TextFieldKey.password)
+
+    @FocusState private var focusedField: TextFieldKey?
 
     let errorText = "Required field"
 
     var body: some View {
-        VStack() {
-            makeErrorTextField(text: $username,
-                               error: $usernameFocusError,
-                               title: FormField.username.title,
-                               formField: .username)
-
-            makeErrorTextField(text: $password,
-                               error: $passwordFocusError,
-                               title: FormField.password.title,
-                               formField: .password)
-
-            Spacer(minLength: 20)
+        VStack(spacing: 20) {
+            VStack {
+                L20TextField(usernameModel)
+                    .focused(self.$focusedField, equals: .username)
+                    .onChange(of: self.focusedField) { [focusedField] _ in
+                        withAnimation {
+                            if focusedField == .username {
+                                usernameModel.error = usernameModel.text.isEmpty ? errorText : nil
+                            }
+                        }
+                    }.onSubmit {
+                        focusedField = .password
+                    }.submitLabel(.next)
+                L20TextField(passwordModel)
+                    .focused(self.$focusedField, equals: .password)
+                    .onChange(of: self.focusedField) { [focusedField] _ in
+                        withAnimation {
+                            if focusedField == .password {
+                                passwordModel.error = passwordModel.text.isEmpty ? errorText : nil
+                            }
+                        }
+                    }.onSubmit {
+                        focusedField = nil
+                    }.submitLabel(.send)
+            }
             Button {
-                withAnimation {
-                    setFocusError(for: FormField.allCases)
-                }
+                focusedField = nil
             } label: {
                 Text("Login")
             }
-            .buttonStyle(PrimaryButtonStyle())
-
+            .buttonStyle(.l20Primary)
         }
         .fixedSize(horizontal: false, vertical: true)
-        .onSubmit {
-            withAnimation {
-                setFocusError(for: FormField.allCases)
-            }
-            
-            if focusedField == .username {
-                focusedField = .password
-            } else {
-                focusedField = nil
-            }
-        }
-    }
-
-    @ViewBuilder
-    func makeErrorTextField(text: Binding<String>,
-                            error: Binding<String?>,
-                            title: String,
-                            formField: FormField) -> some View {
-        TextField("", text: text)
-            .textFieldStyle(HorizontalStackedLabelTextFieldStyle(title: title))
-            .inlineError(error.wrappedValue)
-            .focused(self.$focusedField, equals: formField)
-            .onChange(of: self.focusedField) { [focusedField] newValue in
-                withAnimation {
-                    updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
-                }
-            }
-            .onChange(of: text.wrappedValue) { newValue in
-                if error.wrappedValue != nil && !newValue.isEmpty {
-                    withAnimation {
-                        error.wrappedValue = nil
-                    }
-                }
-            }
-            .padding(.horizontal, 20)
-    }
-
-    func updateErrorsForFocusState(currentlyActiveField: FormField?, previouslyActiveField: FormField?) {
-        if previouslyActiveField == .username {
-            if currentlyActiveField == .password {
-                setFocusError(for: [.username])
-            }
-        } else if previouslyActiveField == .password {
-            if currentlyActiveField == .username {
-                setFocusError(for: [.password])
-            }
-        }
-    }
-
-    func setFocusError(for fields: [FormField]) {
-        for field in fields {
-            switch field {
-            case .username:
-                usernameFocusError = username.isEmpty ? errorText : nil
-            case .password:
-                passwordFocusError = password.isEmpty ? errorText : nil
-            }
-        }
     }
 }
 

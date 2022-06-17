@@ -1,5 +1,5 @@
 //
-//  HorizontalStackedLabelTextFieldStyle.swift
+//  L20TextFieldStyle.swift
 //  LoginForm
 //
 //  Created by Joanna Lingenfelter on 6/17/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HorizontalStackedLabelTextFieldStyle: TextFieldStyle {
+struct L20TextFieldStyle: TextFieldStyle {
     let title: String
 
     func _body(configuration: TextField<Self._Label>) -> some View {
@@ -23,6 +23,17 @@ struct HorizontalStackedLabelTextFieldStyle: TextFieldStyle {
                 .frame(height: 1)
                 .background(Color.gray)
         }
+    }
+
+    fileprivate init(title: String) {
+        self.title = title
+    }
+}
+
+extension TextFieldStyle where Self == L20TextFieldStyle {
+
+    static func l20TextField(title: String) -> Self {
+        L20TextFieldStyle(title: title)
     }
 }
 
