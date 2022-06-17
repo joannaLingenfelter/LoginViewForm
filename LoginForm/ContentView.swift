@@ -20,7 +20,7 @@ struct ErrorTextField<TextFieldStyle: ErrorShowingTextFieldStyle>: View {
 
     var body: some View {
         TextField("", text: $text)
-            .textFieldStyle(textFieldStyle.init(title: self.title, error: error))
+            .textFieldStyle(textFieldStyle.init(title: title, error: error))
     }
 }
 
