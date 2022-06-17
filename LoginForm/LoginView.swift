@@ -82,12 +82,7 @@ struct LoginView: View {
                             error.wrappedValue = nil
                         }
                     }
-                }
-
-            Text(error.wrappedValue ?? "")
-                .foregroundColor(.red)
-                .opacity(error.wrappedValue == nil ? 0.0 : 1.0)
-                .font(.caption)
+                }.modifier(InlineError(error: error.wrappedValue))
         }
         .padding(.horizontal, 20)
     }

@@ -13,6 +13,7 @@
 		63FF5EA9285BB9DC00E3BE8E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63FF5EA8285BB9DC00E3BE8E /* Preview Assets.xcassets */; };
 		63FF5EB6285CB12100E3BE8E /* HorizontalStackedLabelTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FF5EB5285CB12100E3BE8E /* HorizontalStackedLabelTextFieldStyle.swift */; };
 		63FF5EB8285CB19200E3BE8E /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FF5EB7285CB19200E3BE8E /* PrimaryButtonStyle.swift */; };
+		63FF5EBA285CD95400E3BE8E /* InlineError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FF5EB9285CD95400E3BE8E /* InlineError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		63FF5EA8285BB9DC00E3BE8E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		63FF5EB5285CB12100E3BE8E /* HorizontalStackedLabelTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalStackedLabelTextFieldStyle.swift; sourceTree = "<group>"; };
 		63FF5EB7285CB19200E3BE8E /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		63FF5EB9285CD95400E3BE8E /* InlineError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,7 @@
 			children = (
 				63FF5EA1285BB9D700E3BE8E /* LoginFormApp.swift */,
 				63FF5EA3285BB9D700E3BE8E /* LoginView.swift */,
+				63FF5EB9285CD95400E3BE8E /* InlineError.swift */,
 				63FF5EB7285CB19200E3BE8E /* PrimaryButtonStyle.swift */,
 				63FF5EB5285CB12100E3BE8E /* HorizontalStackedLabelTextFieldStyle.swift */,
 				63FF5EA5285BB9DC00E3BE8E /* Assets.xcassets */,
@@ -145,6 +148,7 @@
 			files = (
 				63FF5EB6285CB12100E3BE8E /* HorizontalStackedLabelTextFieldStyle.swift in Sources */,
 				63FF5EB8285CB19200E3BE8E /* PrimaryButtonStyle.swift in Sources */,
+				63FF5EBA285CD95400E3BE8E /* InlineError.swift in Sources */,
 				63FF5EA4285BB9D700E3BE8E /* LoginView.swift in Sources */,
 				63FF5EA2285BB9D700E3BE8E /* LoginFormApp.swift in Sources */,
 			);
