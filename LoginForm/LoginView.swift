@@ -67,24 +67,23 @@ struct LoginView: View {
                             error: Binding<String?>,
                             title: String,
                             formField: FormField) -> some View {
-        VStack(alignment: .leading) {
-            TextField("", text: text)
-                .textFieldStyle(HorizontalStackedLabelTextFieldStyle(title: title))
-                .focused(self.$focusedField, equals: formField)
-                .onChange(of: self.focusedField) { [focusedField] newValue in
+        TextField("", text: text)
+            .textFieldStyle(HorizontalStackedLabelTextFieldStyle(title: title))
+            .focused(self.$focusedField, equals: formField)
+            .onChange(of: self.focusedField) { [focusedField] newValue in
+                withAnimation {
+                    updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
+                }
+            }
+            .onChange(of: text.wrappedValue) { newValue in
+                if error.wrappedValue != nil && !newValue.isEmpty {
                     withAnimation {
-                        updateErrorsForFocusState(currentlyActiveField: newValue, previouslyActiveField: focusedField)
+                        error.wrappedValue = nil
                     }
                 }
-                .onChange(of: text.wrappedValue) { newValue in
-                    if error.wrappedValue != nil && !newValue.isEmpty {
-                        withAnimation {
-                            error.wrappedValue = nil
-                        }
-                    }
-                }.modifier(InlineError(error: error.wrappedValue))
-        }
-        .padding(.horizontal, 20)
+            }
+            .modifier(InlineError(error: error.wrappedValue))
+            .padding(.horizontal, 20)
     }
 
     func updateErrorsForFocusState(currentlyActiveField: FormField?, previouslyActiveField: FormField?) {
