@@ -7,50 +7,6 @@
 
 import SwiftUI
 
-protocol ErrorShowingTextFieldStyle: TextFieldStyle {
-    init(title: String, error: String?)
-}
-
-struct ErrorTextField<TextFieldStyle: ErrorShowingTextFieldStyle>: View {
-    @Binding var text: String
-    @Binding var error: String?
-
-    let title: String
-    let textFieldStyle: TextFieldStyle.Type
-
-    var body: some View {
-        TextField("", text: $text)
-            .textFieldStyle(textFieldStyle.init(title: title, error: error))
-    }
-}
-
-struct HorizontalStackedLabelTextFieldStyle: ErrorShowingTextFieldStyle {
-    let title: String
-    let error: String?
-
-    func _body(configuration: TextField<Self._Label>) -> some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(title)
-                Spacer(minLength: 10)
-                configuration
-                    .shadow(color: .gray, radius: 10)
-            }
-
-            Rectangle()
-                .frame(height: 1)
-                .background(Color.gray)
-
-            if let error = error {
-                Text(error)
-                    .foregroundColor(.red)
-                    .opacity(error.isEmpty ? 0.0 : 1.0)
-                    .font(.caption)
-            }
-        }
-    }
-}
-
 struct ContentView: View {
     enum FormField: String, CaseIterable {
         case username
@@ -83,11 +39,7 @@ struct ContentView: View {
             } label: {
                 Text("Login")
             }
-            .padding(.horizontal, 40)
-            .padding(.vertical, 10)
-            .background(Color(.black))
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .buttonStyle(PrimaryButtonStyle())
 
         }
         .fixedSize(horizontal: false, vertical: true)
