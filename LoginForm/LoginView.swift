@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  LoginView.swift
 //  LoginForm
 //
 //  Created by Joanna Lingenfelter on 6/16/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct LoginView: View {
     enum FormField: String, CaseIterable {
         case username
         case password
@@ -90,6 +90,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        LoginView()
     }
 }
