@@ -75,39 +75,10 @@ struct ContentView: View {
 
     var body: some View {
         VStack() {
-            ErrorTextField(text: $username, error: $usernameFocusError, title: FormField.username.title, textFieldStyle: LabeledTextFieldStyle.self)
-                .focused($focusedField, equals: .username)
-                .padding(.horizontal, 20)
-                .onChange(of: focusedField) { [focusedField] newValue in
-                    if focusedField == nil {
-                        // First change of focus
-                        if newValue == .username {
-                            usernameFocusError = username.isEmpty ? errorText : nil
-                        } else if newValue == .password {
-                            passwordFocusError = password.isEmpty ? errorText : nil
-                        }
-                    } else {
-                        usernameFocusError = username.isEmpty ? errorText : nil
-                        passwordFocusError = password.isEmpty ? errorText : nil
-                    }
-                }
+            makeErrorTextField(text: $username, error: $usernameFocusError, title: FormField.username.title, fieldName: .username)
 
-            ErrorTextField(text: $password, error: $passwordFocusError, title: FormField.password.title, textFieldStyle: LabeledTextFieldStyle.self)
-                .focused($focusedField, equals: .password)
-                .padding(.horizontal, 20)
-                .onChange(of: focusedField) { [focusedField] newValue in
-                    if focusedField == nil {
-                        // First change of focus
-                        if newValue == .password {
-                            passwordFocusError = password.isEmpty ? errorText : nil
-                        } else if newValue == .username {
-                            usernameFocusError = username.isEmpty ? errorText : nil
-                        }
-                    } else {
-                        usernameFocusError = username.isEmpty ? errorText : nil
-                        passwordFocusError = password.isEmpty ? errorText : nil
-                    }
-                }
+            makeErrorTextField(text: $password, error: $passwordFocusError, title: FormField.password.title, fieldName: .password)
+
             Spacer(minLength: 20)
             Button {
                 usernameFocusError = username.isEmpty ? errorText : nil
@@ -115,6 +86,7 @@ struct ContentView: View {
             } label: {
                 Text("Login")
             }
+
             .padding(.horizontal, 40)
             .padding(.vertical, 10)
             .background(Color(.black))
@@ -133,6 +105,26 @@ struct ContentView: View {
                 focusedField = nil
             }
         }
+    }
+
+    @ViewBuilder
+    func makeErrorTextField(text: Binding<String>, error: Binding<String?>, title: String, fieldName: FormField) -> some View {
+        ErrorTextField(text: text, error: error, title: title, textFieldStyle: LabeledTextFieldStyle.self)
+            .focused(self.$focusedField, equals: fieldName)
+            .padding(.horizontal, 20)
+            .onChange(of: self.focusedField) { [focusedField] newValue in
+                if focusedField == nil {
+                    // First change of focus
+                    if newValue == .password {
+                        passwordFocusError = password.isEmpty ? errorText : nil
+                    } else if newValue == .username {
+                        usernameFocusError = username.isEmpty ? errorText : nil
+                    }
+                } else {
+                    usernameFocusError = username.isEmpty ? errorText : nil
+                    passwordFocusError = password.isEmpty ? errorText : nil
+                }
+            }
     }
 }
 
