@@ -30,8 +30,18 @@ struct LoginView: View {
     var body: some View {
         VStack() {
             makeErrorTextField(text: $username, error: $usernameFocusError, title: FormField.username.title, formField: .username)
+                .onChange(of: username) { newValue in
+                    if usernameFocusError != nil && !newValue.isEmpty {
+                        usernameFocusError = nil
+                    }
+                }
 
             makeErrorTextField(text: $password, error: $passwordFocusError, title: FormField.password.title, formField: .password)
+                .onChange(of: password) { newValue in
+                    if passwordFocusError != nil && !newValue.isEmpty {
+                        passwordFocusError = nil
+                    }
+                }
 
             Spacer(minLength: 20)
             Button {
