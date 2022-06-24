@@ -28,16 +28,6 @@ struct LoginView: View {
 
     @FocusState private var focusedField: TextFieldKey?
 
-<<<<<<< Updated upstream
-    let errorText = "Required field"
-
-    init() {
-        _usernameModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.username.description))
-        _passwordModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.password.description))
-    }
-
-=======
->>>>>>> Stashed changes
     var body: some View {
         VStack(spacing: 40) {
             VStack(spacing: 50) {
@@ -68,6 +58,7 @@ struct LoginView: View {
 
             Button {
                 focusedField = nil
+                passwordModel.isSecure.toggle()
             } label: {
                 Text("Login")
             }
@@ -78,7 +69,7 @@ struct LoginView: View {
 
     @ViewBuilder
     private func LoginTextField(_ model: L20TextField.ViewModel, key: TextFieldKey) -> some View {
-        L20TextField(model, isSecure: key == .password)
+        L20TextField(model)
             .focused(self.$focusedField, equals: key)
             .onChange(of: self.focusedField) { [focusedField] _ in
                 withAnimation {
