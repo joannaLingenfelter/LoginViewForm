@@ -27,8 +27,8 @@ struct LoginView: View {
     let errorText = "Required field"
 
     init() {
-        _usernameModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.username.description))
-        _passwordModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.password.description))
+        _usernameModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.username.description, isSecure: false))
+        _passwordModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.password.description, isSecure: true))
     }
 
     var body: some View {
@@ -49,6 +49,8 @@ struct LoginView: View {
             }
             Button {
                 focusedField = nil
+
+                passwordModel.isSecure = !passwordModel.isSecure
             } label: {
                 Text("Login")
             }
@@ -59,7 +61,7 @@ struct LoginView: View {
 
     @ViewBuilder
     private func LoginTextField(_ model: L20TextField.ViewModel, key: TextFieldKey) -> some View {
-        L20TextField(model, isSecure: key == .password)
+        L20TextField(model)
             .focused(self.$focusedField, equals: key)
             .onChange(of: self.focusedField) { [focusedField] _ in
                 withAnimation {
