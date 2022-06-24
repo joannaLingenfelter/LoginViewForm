@@ -12,15 +12,8 @@ struct L20TextField: View {
 
     @StateObject private var model: ViewModel
 
-    @Binding private var isSecure: Bool
-
     init(_ model: ViewModel) {
         _model = StateObject(wrappedValue: model)
-        _isSecure = Binding(get: {
-            model.isSecure
-        }, set: { newValue in
-            model.isSecure = newValue
-        })
     }
 
     var body: some View {
