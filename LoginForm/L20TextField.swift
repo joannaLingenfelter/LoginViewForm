@@ -16,7 +16,15 @@ struct L20TextField: View {
 
     init(_ model: ViewModel, isSecure: Bool) {
         _model = StateObject(wrappedValue: model)
+<<<<<<< Updated upstream
         self.isSecure = isSecure
+=======
+        _isSecure = Binding(get: {
+            model.isSecure
+        }, set: { newValue in
+            model.isSecure = newValue
+        })
+>>>>>>> Stashed changes
     }
 
     var body: some View {

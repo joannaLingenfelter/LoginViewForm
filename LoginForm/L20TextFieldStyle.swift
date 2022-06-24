@@ -14,6 +14,7 @@ struct L20TextFieldStyle: TextFieldStyle {
         VStack(alignment: .leading) {
             HStack {
                 Text(title)
+                    .padding(.leading, 10)
                 Spacer(minLength: 10)
                 configuration
                     .shadow(color: .gray, radius: 10)

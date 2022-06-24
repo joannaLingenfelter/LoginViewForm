@@ -9,21 +9,26 @@ import SwiftUI
 
 private enum TextFieldKey: String, CustomStringConvertible {
 
-    case username
+    case email
     case password
 
     var description: String {
         rawValue.capitalized
     }
+
+    var errorText: String {
+        "Required field"
+    }
 }
 
 struct LoginView: View {
 
-    @StateObject private var usernameModel: L20TextField.ViewModel
-    @StateObject private var passwordModel: L20TextField.ViewModel
+    @StateObject private var emailModel = L20TextField.ViewModel(title: TextFieldKey.email.description, isSecure: false)
+    @StateObject private var passwordModel = L20TextField.ViewModel(title: TextFieldKey.password.description, isSecure: true)
 
     @FocusState private var focusedField: TextFieldKey?
 
+<<<<<<< Updated upstream
     let errorText = "Required field"
 
     init() {
@@ -31,22 +36,36 @@ struct LoginView: View {
         _passwordModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.password.description))
     }
 
+=======
+>>>>>>> Stashed changes
     var body: some View {
-        VStack(spacing: 20) {
-            VStack {
-                LoginTextField(usernameModel, key: .username)
+        VStack(spacing: 40) {
+            VStack(spacing: 50) {
+                LoginTextField(emailModel, key: .email)
                     .textContentType(.username)
                     .submitLabel(.next)
                     .onSubmit {
                         focusedField = .password
                     }
-                LoginTextField(passwordModel, key: .password)
-                    .textContentType(.password)
-                    .submitLabel(.send)
-                    .onSubmit {
-                        focusedField = nil
+                VStack(alignment: .trailing, spacing: 5) {
+                    LoginTextField(passwordModel, key: .password)
+                        .textContentType(.password)
+                        .submitLabel(.send)
+                        .onSubmit {
+                            focusedField = nil
+                        }
+
+                    Button {
+                        print("Forgot password pressed!")
+                    } label: {
+                        Text("Forgot password?")
+                            .foregroundColor(Color.black)
                     }
+                    .padding(.trailing, 20)
+                }
+
             }
+
             Button {
                 focusedField = nil
             } label: {
@@ -64,7 +83,7 @@ struct LoginView: View {
             .onChange(of: self.focusedField) { [focusedField] _ in
                 withAnimation {
                     if focusedField == key {
-                        model.error = model.text.isEmpty ? errorText : nil
+                        model.error = model.text.isEmpty ? key.errorText : nil
                     }
                 }
             }

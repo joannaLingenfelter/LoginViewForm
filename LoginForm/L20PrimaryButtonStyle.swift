@@ -10,7 +10,7 @@ import SwiftUI
 struct L20PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.horizontal, 40)
+            .padding(.horizontal, 50)
             .padding(.vertical, 10)
             .background(Color(.black))
             .foregroundColor(.white)
