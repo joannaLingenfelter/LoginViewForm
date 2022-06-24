@@ -19,12 +19,17 @@ private enum TextFieldKey: String, CustomStringConvertible {
 
 struct LoginView: View {
 
-    @StateObject private var usernameModel = L20TextField.ViewModel(title: TextFieldKey.username)
-    @StateObject private var passwordModel = L20TextField.ViewModel(title: TextFieldKey.password)
+    @StateObject private var usernameModel: L20TextField.ViewModel
+    @StateObject private var passwordModel: L20TextField.ViewModel
 
     @FocusState private var focusedField: TextFieldKey?
 
     let errorText = "Required field"
+
+    init() {
+        _usernameModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.username.description))
+        _passwordModel = StateObject(wrappedValue: L20TextField.ViewModel(title: TextFieldKey.password.description))
+    }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -54,7 +59,7 @@ struct LoginView: View {
 
     @ViewBuilder
     private func LoginTextField(_ model: L20TextField.ViewModel, key: TextFieldKey) -> some View {
-        L20TextField(model)
+        L20TextField(model, isSecure: key == .password)
             .focused(self.$focusedField, equals: key)
             .onChange(of: self.focusedField) { [focusedField] _ in
                 withAnimation {

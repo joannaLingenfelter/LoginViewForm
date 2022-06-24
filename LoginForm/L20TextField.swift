@@ -12,12 +12,15 @@ struct L20TextField: View {
 
     @StateObject private var model: ViewModel
 
-    init(_ model: ViewModel) {
+    var isSecure: Bool
+
+    init(_ model: ViewModel, isSecure: Bool) {
         _model = StateObject(wrappedValue: model)
+        self.isSecure = isSecure
     }
 
     var body: some View {
-        TextField("", text: $model.text)
+        HybridTextField(title: "", isSecure: isSecure, text: $model.text)
             .textFieldStyle(.l20TextField(title: model.title))
             .inlineError(model.error)
             .onChange(of: $model.text.wrappedValue) { newValue in
@@ -29,6 +32,16 @@ struct L20TextField: View {
             }
             .padding(.horizontal, 20)
     }
+
+    @ViewBuilder func HybridTextField(title: String,
+                                      isSecure: Bool,
+                                      text: Binding<String>) -> some View {
+        if isSecure {
+            SecureField(title, text: text)
+        } else {
+            TextField(title, text: text)
+        }
+    }
 }
 
 extension L20TextField {
@@ -36,11 +49,12 @@ extension L20TextField {
     class ViewModel: ObservableObject {
 
         let title: String
+        
         @Published var text: String = ""
         @Published var error: String? = nil
 
-        init<S>(title: S) where S: StringProtocol {
-            self.title = String(title)
+        init(title: String) {
+            self.title = title
         }
 
         init<S>(title: S) where S: CustomStringConvertible {
